@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/Makefile">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/Makefile" />
+              <option name="originalContent" value="export PATH := C:/msys64/ucrt64/bin;$(PATH)&#10;&#10;CC       = C:/msys64/ucrt64/bin/gcc.exe&#10;SANITIZE = -fsanitize=undefined&#10;&#10;CMOCKA_INC = C:/dev/vcpkg/installed/x64-windows/include&#10;CMOCKA_LIB = C:/dev/vcpkg/installed/x64-windows/lib&#10;&#10;CFLAGS   = -Wall -Wextra -I$(CMOCKA_INC) -Iinclude&#10;DEBUG    = $(SANITIZE) -g -O0 $(CFLAGS)&#10;LDFLAGS  = $(SANITIZE) -L$(CMOCKA_LIB) -lcmocka&#10;&#10;SRC          = $(wildcard src/*.c)&#10;TEST_SRC     = $(wildcard tests/*.c)&#10;BENCH_SRC    = $(wildcard bench/*.c)&#10;SRC_NO_MAIN  = $(filter-out src/main.c, $(SRC))&#10;&#10;APP_BIN   = build/tasklab.exe&#10;TEST_BIN  = build/test_runner.exe&#10;BENCH_BIN = build/bench_runner.exe&#10;&#10;OBJ = $(patsubst src/%.c, build/%.o, $(SRC))&#10;&#10;.PHONY: all test bench clean&#10;&#10;all: build $(APP_BIN)&#10;&#10;test: build $(TEST_BIN)&#10;&#9;./$(TEST_BIN)&#10;&#10;bench: build $(BENCH_BIN)&#10;&#9;./$(BENCH_BIN)&#10;&#10;build:&#10;&#9;mkdir build 2&gt;NUL || exit 0&#10;&#10;$(APP_BIN): $(OBJ)&#10;&#9;$(CC) $(DEBUG) $^ -o $@&#10;&#10;$(TEST_BIN): $(SRC_NO_MAIN) $(TEST_SRC)&#10;&#9;$(CC) $(DEBUG) $^ -o $@ $(LDFLAGS)&#10;&#10;$(BENCH_BIN): $(SRC_NO_MAIN) $(BENCH_SRC)&#10;&#9;$(CC) $(DEBUG) $^ -o $@&#10;&#10;build/%.o: src/%.c&#10;&#9;$(CC) $(DEBUG) -c $&lt; -o $@&#10;&#10;clean:&#10;&#9;rmdir /S /Q build 2&gt;NUL || exit 0&#10;" />
+              <option name="updatedContent" value="export PATH := C:/msys64/ucrt64/bin;$(PATH)&#10;&#10;SHELL = C:/msys64/usr/bin/sh.exe&#10;&#10;CC       = C:/msys64/ucrt64/bin/gcc.exe&#10;CMOCKA_INC = C:/dev/vcpkg/installed/x64-windows-static/include&#10;CMOCKA_LIB = C:/dev/vcpkg/installed/x64-windows-static/lib&#10;&#10;CFLAGS   = -Wall -Wextra -I$(CMOCKA_INC) -Iinclude&#10;DEBUG    = -g -O0 $(CFLAGS)&#10;LDFLAGS  = -L$(CMOCKA_LIB) -lcmocka&#10;&#10;SRC          = $(wildcard src/*.c)&#10;TEST_SRC     = $(wildcard tests/*.c)&#10;BENCH_SRC    = $(wildcard bench/*.c)&#10;SRC_NO_MAIN  = $(filter-out src/main.c, $(SRC))&#10;&#10;APP_BIN   = build/tasklab.exe&#10;TEST_BIN  = build/test_runner.exe&#10;BENCH_BIN = build/bench_runner.exe&#10;&#10;OBJ = $(patsubst src/%.c, build/%.o, $(SRC))&#10;&#10;.PHONY: all test bench clean&#10;&#10;all: build $(APP_BIN)&#10;&#10;test: build $(TEST_BIN)&#10;&#9;./$(TEST_BIN)&#10;&#10;bench: build $(BENCH_BIN)&#10;&#9;./$(BENCH_BIN)&#10;&#10;build:&#10;&#9;mkdir build 2&gt;NUL || exit 0&#10;&#10;$(APP_BIN): $(OBJ)&#10;&#9;$(CC) $(DEBUG) $^ -o $@&#10;&#10;$(TEST_BIN): $(SRC_NO_MAIN) $(TEST_SRC)&#10;&#9;$(CC) $(DEBUG) $^ -o $@ $(LDFLAGS)&#10;&#10;$(BENCH_BIN): $(SRC_NO_MAIN) $(BENCH_SRC)&#10;&#9;$(CC) $(DEBUG) $^ -o $@&#10;&#10;build/%.o: src/%.c&#10;&#9;$(CC) $(DEBUG) -c $&lt; -o $@&#10;&#10;clean:&#10;&#9;rmdir /S /Q build 2&gt;NUL || exit 0&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/bench/bench_main.c">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/bench/bench_main.c" />
+              <option name="updatedContent" value="#include &lt;stdio.h&gt;&#10;&#10;int main(void) {&#10;    printf(&quot;[bench] no benchmarks yet — Phase 0 stub\n&quot;);&#10;    return 0;&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/docs/design.md">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/docs/design.md" />
+              <option name="updatedContent" value="# tasklab — Design Notes&#10;&#10;## Sanitizer Policy&#10;&#10;- **AddressSanitizer (ASan)**: Not available on MinGW/Windows. Deferred to WSL for stress/sanitizer validation runs.&#10;- **UndefinedBehaviorSanitizer (UBSan)**: Enabled in all debug builds via `-fsanitize=undefined`.&#10;- Full ASan runs: `wsl make test` (once WSL toolchain is configured).&#10;&#10;## Build Profiles&#10;&#10;- **Debug** (default): `-fsanitize=undefined -g -O0 -Wall -Wextra`&#10;- **Release** (future): `-O2 -DNDEBUG`&#10;&#10;## Directory Layout&#10;&#10;| Path | Purpose |&#10;|---|---|&#10;| `include/` | Public headers (tl_task.h, tl_pool.h, etc.) |&#10;| `src/` | Implementation files |&#10;| `tests/` | cmocka unit + stress tests |&#10;| `bench/` | Benchmark harnesses |&#10;| `docs/` | Design decisions and benchmark results |&#10;| `build/` | Compiled artifacts (git-ignored) |&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
