@@ -10,4 +10,8 @@ add_executable(tasklab
         .idea/workspace.xml
         Makefile
         src/main.c
-        tests/test_main.c)
+        tests/test_main.c
+        src/tl_task.c
+        src/tl_task.h
+        tests/test_tl_task.h
+        include/tl/task.h)

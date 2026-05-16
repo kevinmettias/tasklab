@@ -21,4 +21,3 @@
 | `bench/` | Benchmark harnesses |
 | `docs/` | Design decisions and benchmark results |
 | `build/` | Compiled artifacts (git-ignored) |
-
