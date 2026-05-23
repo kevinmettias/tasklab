@@ -11,7 +11,6 @@ add_executable(tasklab
         Makefile
         src/main.c
         tests/test_main.c
-        src/tl_task.c
-        src/tl_task.h
-        tests/test_tl_task.h
+        src/task.c
+        tests/test_task.h
         include/tl/task.h)

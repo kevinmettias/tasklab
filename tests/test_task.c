@@ -1,11 +1,12 @@
 #include <stdarg.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "test_tl_task.h"
+#include "test_task.h"
 
-void test_task_fn(void *ctx) {
+void Test_Task_Fn(void *ctx) {
     if (ctx == NULL)
     {
         return;
@@ -17,23 +18,23 @@ void test_task_fn(void *ctx) {
     test_ctx->result = test_ctx->input * 2;
 }
 
-void test_assert_null_safe(TlTask *task)
+void Test_Assert_Null_Safe(TlTask *task)
 {
     if (task != NULL)
     {
-        destroy_task(task);
+        Destroy_Task(task);
         task = NULL;
     }
     assert_null(task);
 }
 
-void test_create_task_transition_state_to_create(void **state) {
+void Test_Create_And_Initialize_Task_Transitions_State_To_Created(void **state) {
     TestCase *test_case = *state;
 
-    TlTask *task = create_task(test_case->fn, test_case->ctx);
+    TlTask *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
     if (test_case->fn == NULL)
     {
-        test_assert_null_safe(task);
+        Test_Assert_Null_Safe(task);
         return;
     }
 
@@ -42,20 +43,20 @@ void test_create_task_transition_state_to_create(void **state) {
     assert_ptr_equal(task->fn, test_case->fn);
     assert_ptr_equal(task->ctx, test_case->ctx);
     assert_int_equal(task->state, CREATED);
-    destroy_task(task);
+    Destroy_Task(task);
 }
 
-void test_run_task_transition_state_to_done(void **state) {
+void Test_Run_Task_Transitions_State_To_Done(void **state) {
     TestCase *test_case = *state;
 
-    TlTask *task = create_task(test_case->fn, test_case->ctx);
+    TlTask *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
     if (test_case->fn == NULL)
     {
-        test_assert_null_safe(task);
+        Test_Assert_Null_Safe(task);
         return;
     }
 
-    run_task(task);
+    Run_Task(task);
 
     if (test_case->ctx != NULL)
     {
@@ -65,5 +66,5 @@ void test_run_task_transition_state_to_done(void **state) {
     }
 
     assert_int_equal(task->state, DONE);
-    destroy_task(task);
+    Destroy_Task(task);
 }

@@ -3,7 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "test_tl_task.h"
+#include "test_task.h"
 
 
 int main(void) {
@@ -14,8 +14,8 @@ int main(void) {
     };
 
     static TestCase test_cases[] = {
-        { .fn = test_task_fn, .ctx = &ctxs[0] },
-        { .fn = test_task_fn, .ctx = NULL },
+        { .fn = Test_Task_Fn, .ctx = &ctxs[0] },
+        { .fn = Test_Task_Fn, .ctx = NULL },
         { .fn = NULL, .ctx = NULL },
     };
 
@@ -33,7 +33,7 @@ int main(void) {
         tests[k++] = (struct CMUnitTest)
         {
             .name = "test_create_task_transition_state_to_create",
-            .test_func = test_create_task_transition_state_to_create,
+            .test_func = Test_Create_And_Initialize_Task_Transitions_State_To_Created,
             .setup_func = NULL,
             .teardown_func = NULL,
             .initial_state = &test_cases[i],
@@ -42,7 +42,7 @@ int main(void) {
         tests[k++] = (struct CMUnitTest)
         {
             .name = "test_run_task_transition_state_to_done",
-            .test_func = test_run_task_transition_state_to_done,
+            .test_func = Test_Run_Task_Transitions_State_To_Done,
             .setup_func = NULL,
             .teardown_func = NULL,
             .initial_state = &test_cases[i],

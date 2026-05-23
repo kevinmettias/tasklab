@@ -20,10 +20,10 @@ typedef struct TlTask {
 } TlTask;
 
 
-TlTask *create_task(TlTaskFn fn, void *ctx);
+TlTask *Create_And_Initialize_Task(TlTaskFn fn, void *ctx);
 
-void run_task(TlTask *task);
+void Run_Task(TlTask *task);
 
-void destroy_task(TlTask *task);
+void Destroy_Task(TlTask *task);
 
 #endif //TASKLAB_TASK_H
