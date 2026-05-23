@@ -21,7 +21,6 @@ TaskNode *Create_And_Initialize_TaskNode(TlTask *task)
     }
 
     node->task = task;
-    node->next = NULL;
     return node;
 }
 

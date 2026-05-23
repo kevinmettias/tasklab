@@ -18,9 +18,9 @@ typedef struct TaskQueue {
 
 TaskQueue *Create_And_Initalize_TaskQueue();
 
-void Push_To_TaskQueue(TaskQueue *queue, TlTask *task);
+void Push_To_End_Of_TaskQueue(TaskQueue *queue, TlTask *task);
 
-TaskNode *Pop_From_TaskQueue(TaskQueue *queue);
+TaskNode *Pop_From_Top_Of_TaskQueue(TaskQueue *queue);
 
 uint64_t Get_TaskQueue_Node_Count(TaskQueue *queue);
 

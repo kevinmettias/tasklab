@@ -32,7 +32,7 @@ void Submit_To_Executor(TaskExecutor *executor, TlTask *task)
         return;
     }
 
-    Push_To_TaskQueue(executor->queue, task);
+    Push_To_End_Of_TaskQueue(executor->queue, task);
 }
 
 void Run_Task_In_TaskNode(TaskNode *take_node)
@@ -49,7 +49,7 @@ void Run_Task_In_TaskNode(TaskNode *take_node)
 TaskNode *Execute_Next_Task_In_TaskQueue(TaskExecutor *executor)
 {
     TaskQueue *queue = executor->queue;
-    TaskNode *task_node = Pop_From_TaskQueue(queue);
+    TaskNode *task_node = Pop_From_Top_Of_TaskQueue(queue);
     Run_Task_In_TaskNode(task_node);
     if (task_node->task->state == FAILED)
     {
@@ -62,7 +62,6 @@ void Execute_Tasks_In_TaskQueue_Until_Queue_Empty(TaskExecutor *executor)
 {
     if (executor == NULL || executor->queue == NULL)
     {
-        // TODO: LOG OR RETURN ERROR RESULT
         return;
     }
 

@@ -20,7 +20,7 @@ TaskQueue *Create_And_Initalize_TaskQueue()
     return queue;
 }
 
-void Push_To_TaskQueue(TaskQueue *queue, TlTask *task)
+void Push_To_End_Of_TaskQueue(TaskQueue *queue, TlTask *task)
 {
     if (task == NULL || task->state != CREATED)
     {
@@ -46,7 +46,7 @@ void Push_To_TaskQueue(TaskQueue *queue, TlTask *task)
     }
 }
 
-TaskNode *Pop_From_TaskQueue(TaskQueue *queue)
+TaskNode *Pop_From_Top_Of_TaskQueue(TaskQueue *queue)
 {
     if (queue == NULL || queue->first_task_node == NULL)
     {
@@ -104,5 +104,4 @@ void Destroy_TaskQueue(TaskQueue *queue)
 
     free(queue);
 }
-
 
