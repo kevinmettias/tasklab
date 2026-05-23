@@ -2,6 +2,7 @@
 #define TASKLAB_TEST_TASK_H
 
 #include "tl/task.h"
+#include <stdbool.h>
 
 typedef struct {
     TlTaskFn fn;
@@ -10,7 +11,7 @@ typedef struct {
 
 typedef struct {
     int input;
-    int was_called;
+    bool was_called;
     int result;
 } TestCtx;
 

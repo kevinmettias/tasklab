@@ -14,7 +14,7 @@ void Test_Task_Fn(void *ctx) {
 
     TestCtx *test_ctx = ctx;
 
-    test_ctx->was_called = 1;
+    test_ctx->was_called = true;
     test_ctx->result = test_ctx->input * 2;
 }
 
@@ -61,7 +61,7 @@ void Test_Run_Task_Transitions_State_To_Done(void **state) {
     if (test_case->ctx != NULL)
     {
         TestCtx *test_ctx = test_case->ctx;
-        assert_int_equal(test_ctx->was_called, 1);
+        assert_true(test_ctx->was_called);
         assert_int_equal(test_ctx->result, test_ctx->input * 2);
     }
 
