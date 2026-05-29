@@ -4,6 +4,9 @@
 #include <cmocka.h>
 
 #include "test_task.h"
+#include "test_node.h"
+#include "test_queue.h"
+#include "test_executor.h"
 
 
 int main(void) {
@@ -21,7 +24,7 @@ int main(void) {
 
     const size_t num_cases = sizeof(test_cases) / sizeof(test_cases[0]);
     const size_t tests_per_case = 2;
-    const size_t total_tests = num_cases * tests_per_case;
+    const size_t total_tests = num_cases * tests_per_case * 3;
 
     struct CMUnitTest *tests = calloc(total_tests, sizeof(*tests));
     if (tests == NULL) {
@@ -47,6 +50,60 @@ int main(void) {
             .teardown_func = NULL,
             .initial_state = &test_cases[i],
         };
+
+        tests[k++] = (struct CMUnitTest)
+        {
+            .name = "test_node_create",
+            .test_func = Test_Create_And_Initialize_TaskNode,
+            .setup_func = NULL,
+            .teardown_func = NULL,
+            .initial_state = &test_cases[i],
+        };
+
+        tests[k++] = (struct CMUnitTest)
+        {
+            .name = "test_queue_create",
+            .test_func = Test_Queue_Create_And_Initialize_Task_Transitions_State_To_Created,
+            .setup_func = NULL,
+            .teardown_func = NULL,
+            .initial_state = &test_cases[i],
+        };
+
+        tests[k++] = (struct CMUnitTest)
+        {
+            .name = "test_queue_run",
+            .test_func = Test_Queue_Run_Task_Transitions_State_To_Done,
+            .setup_func = NULL,
+            .teardown_func = NULL,
+            .initial_state = &test_cases[i],
+        };
+
+        tests[k++] = (struct CMUnitTest)
+        {
+            .name = "test_executor_create",
+            .test_func = Test_Create_And_Initialize_Task_Executor,
+            .setup_func = NULL,
+            .teardown_func = NULL,
+            .initial_state = &test_cases[i],
+        };
+
+        /*tests[k++] = (struct CMUnitTest)
+        {
+            .name = "test_executor_create_with_new_queue",
+            .test_func = Test_Create_And_Initialize_Task_Executor_With_New_Queue,
+            .setup_func = NULL,
+            .teardown_func = NULL,
+            .initial_state = &test_cases[i],
+        };
+
+        /*tests[k++] = (struct CMUnitTest)
+        {
+            .name = "test_executor_run_until_empty",
+            .test_func = Test_Execute_Tasks_In_TaskQueue_Until_Queue_Empty,
+            .setup_func = NULL,
+            .teardown_func = NULL,
+            .initial_state = &test_cases[i],
+        };*/
     }
 
     int rc = _cmocka_run_group_tests("tasklab", tests, k, NULL, NULL);

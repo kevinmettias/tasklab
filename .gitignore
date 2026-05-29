@@ -1,0 +1,34 @@
+# Build outputs
+/build/
+/cmake-build-*/
+/*.exe
+/*.dll
+/*.pdb
+/*.ilk
+/*.o
+/*.obj
+/*.a
+/*.lib
+/*.exp
+
+# CMake / Ninja generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+build.ninja
+.ninja_log
+.ninja_deps
+Testing/
+
+# CLion / JetBrains IDE files
+.idea/
+*.iml
+
+# Temporary / OS files
+.DS_Store
+Thumbs.db
+
+# Optional local logs
+*.log
+

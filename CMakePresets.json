@@ -1,0 +1,42 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "debug-vcpkg",
+      "displayName": "Debug + vcpkg",
+      "description": "Debug build for CLion using the local vcpkg toolchain.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "cmocka_DIR": "C:/dev/vcpkg/installed/x64-windows/share/cmocka",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      },
+      "environment": {
+        "VCPKG_ROOT": "C:/dev/vcpkg"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug-vcpkg",
+      "configurePreset": "debug-vcpkg",
+      "configuration": "Debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "debug-vcpkg",
+      "configurePreset": "debug-vcpkg",
+      "configuration": "Debug"
+    }
+  ]
+}
+

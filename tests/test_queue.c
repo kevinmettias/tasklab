@@ -5,6 +5,7 @@
 #include <cmocka.h>
 
 #include "test_queue.h"
+#include "tl/queue.h"
 
 void Test_Queue_Task_Fn(void *ctx) {
     if (ctx == NULL)
@@ -13,7 +14,6 @@ void Test_Queue_Task_Fn(void *ctx) {
     }
 
     TestCtx *test_ctx = ctx;
-
     test_ctx->was_called = true;
     test_ctx->result = test_ctx->input * 2;
 }
@@ -23,7 +23,6 @@ static void Test_Queue_Assert_Null_Safe(TlTask *task)
     if (task != NULL)
     {
         Destroy_Task(task);
-        task = NULL;
     }
     assert_null(task);
 }
@@ -32,8 +31,7 @@ void Test_Queue_Create_And_Initialize_Task_Transitions_State_To_Created(void **s
     TestCase *test_case = *state;
 
     TlTask *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
-    if (test_case->fn == NULL)
-    {
+    if (test_case->fn == NULL) {
         Test_Queue_Assert_Null_Safe(task);
         return;
     }
@@ -46,7 +44,8 @@ void Test_Queue_Create_And_Initialize_Task_Transitions_State_To_Created(void **s
     Destroy_Task(task);
 }
 
-void Test_Queue_Run_Task_Transitions_State_To_Done(void **state) {
+void Test_Queue_Run_Task_Transitions_State_To_Done(void **state)
+{
     TestCase *test_case = *state;
 
     TlTask *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);

@@ -5,9 +5,7 @@
 
 TlTask *Create_Task()
 {
-    TlTask *task = malloc(sizeof(TlTask));
-    task->id = Random_uint64_t_Id();
-    return task;
+    return malloc(sizeof(TlTask));
 }
 
 TlTask *Create_And_Initialize_Task(TlTaskFn fn, void *ctx)
@@ -18,6 +16,12 @@ TlTask *Create_And_Initialize_Task(TlTaskFn fn, void *ctx)
     }
 
     TlTask *task = Create_Task();
+    if (task == NULL)
+    {
+        return NULL;
+    }
+
+    task->id = Random_uint64_t_Id();
     task->fn = fn;
     task->ctx = ctx;
     task->state = CREATED;

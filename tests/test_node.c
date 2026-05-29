@@ -14,7 +14,6 @@ void Test_Node_Task_Fn(void *ctx) {
     }
 
     TestCtx *test_ctx = ctx;
-
     test_ctx->was_called = true;
     test_ctx->result = test_ctx->input * 2;
 }
@@ -23,6 +22,13 @@ void Test_Create_And_Initialize_TaskNode(void **state) {
     TestCase *test_case = *state;
 
     TlTask *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
+    if (test_case->fn == NULL)
+    {
+        assert_null(Create_And_Initialize_TaskNode(task));
+        Destroy_Task(task);
+        return;
+    }
+
     assert_non_null(task);
 
     TaskNode *task_node = Create_And_Initialize_TaskNode(task);
