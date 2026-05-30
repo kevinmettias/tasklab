@@ -1,30 +1,9 @@
 #ifndef TASKLAB_TEST_TASK_EXECUTOR_H
 #define TASKLAB_TEST_TASK_EXECUTOR_H
 
-#include <stdbool.h>
-
-#include "tl/task.h"
 #include "tl/queue.h"
 #include "tl/executor.h"
-
-#ifndef TASKLAB_TEST_CASE_DEFINED
-#define TASKLAB_TEST_CASE_DEFINED
-
-typedef struct {
-    TlTaskFn fn;
-    void *ctx;
-} TestCase;
-#endif
-
-#ifndef TASKLAB_TEST_CTX_DEFINED
-#define TASKLAB_TEST_CTX_DEFINED
-
-typedef struct {
-    int input;
-    bool was_called;
-    int result;
-} TestCtx;
-#endif
+#include "test_support.h"
 
 void Test_Executor_Task_Fn(void *ctx);
 void Test_Create_And_Initialize_Task_Executor(void **state);

@@ -102,6 +102,14 @@ void Destroy_TaskQueue(TaskQueue *queue)
         return;
     }
 
+    TaskNode *current_node = queue->first_task_node;
+    while (current_node != NULL)
+    {
+        TaskNode *next_node = current_node->next;
+        Destroy_TaskNode(current_node);
+        current_node = next_node;
+    }
+
     free(queue);
 }
 

@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install C dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bear \
+            build-essential \
+            clang-tidy \
+            cmake \
+            cppcheck \
+            lcov \
+            libcmocka-dev \
+            pre-commit \
+            valgrind
+
+      - name: Configure CMake
+        run: cmake -S . -B build
+
+      - name: Build CMake project
+        run: cmake --build build --parallel
+
+      - name: Run CMake tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Clean Make build directory
+        run: make clean
+
+      - name: Build with Make
+        run: make
+
+      - name: Run Make tests
+        run: make test
+
+      - name: Configure sanitizer build
+        run: cmake -S . -B build-sanitize -DTASKLAB_ENABLE_ASAN=ON -DTASKLAB_ENABLE_UBSAN=ON
+
+      - name: Build sanitizer target
+        run: cmake --build build-sanitize --parallel
+
+      - name: Run sanitizer tests
+        run: ctest --test-dir build-sanitize --output-on-failure
+

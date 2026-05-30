@@ -28,7 +28,9 @@ Testing/
 # Temporary / OS files
 .DS_Store
 Thumbs.db
+NUL
 
 # Optional local logs
 *.log
+
 

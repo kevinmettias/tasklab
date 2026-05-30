@@ -87,23 +87,6 @@ int main(void) {
             .initial_state = &test_cases[i],
         };
 
-        /*tests[k++] = (struct CMUnitTest)
-        {
-            .name = "test_executor_create_with_new_queue",
-            .test_func = Test_Create_And_Initialize_Task_Executor_With_New_Queue,
-            .setup_func = NULL,
-            .teardown_func = NULL,
-            .initial_state = &test_cases[i],
-        };
-
-        /*tests[k++] = (struct CMUnitTest)
-        {
-            .name = "test_executor_run_until_empty",
-            .test_func = Test_Execute_Tasks_In_TaskQueue_Until_Queue_Empty,
-            .setup_func = NULL,
-            .teardown_func = NULL,
-            .initial_state = &test_cases[i],
-        };*/
     }
 
     int rc = _cmocka_run_group_tests("tasklab", tests, k, NULL, NULL);

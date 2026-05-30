@@ -53,7 +53,10 @@ TaskNode *Execute_Next_Task_In_TaskQueue(TaskExecutor *executor)
     Run_Task_In_TaskNode(task_node);
     if (task_node->task->state == FAILED)
     {
-        executor->failure_fn(executor->failure_ctx);
+        if (executor->failure_fn != NULL)
+        {
+            executor->failure_fn(executor->failure_ctx);
+        }
     }
     return queue->first_task_node;
 }

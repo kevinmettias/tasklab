@@ -1,49 +1,30 @@
-export PATH := C:/msys64/ucrt64/bin;$(PATH)
+CMAKE := cmake
+CTEST := ctest
 
-CC       = C:/msys64/ucrt64/bin/gcc.exe
+PRESET := debug
+ifeq ($(OS),Windows_NT)
+EXE_EXT := .exe
+ifdef VCPKG_ROOT
+PRESET := debug-vcpkg
+endif
+else
+EXE_EXT :=
+endif
 
-CMOCKA_INC = C:/msys64/ucrt64/include
-CMOCKA_LIB = C:/msys64/ucrt64/lib
-
-CFLAGS   = -Wall -Wextra -I$(CMOCKA_INC) -Iinclude
-DEBUG    = -g -O0 $(CFLAGS)
-LDFLAGS  = -L$(CMOCKA_LIB) -lcmocka
-
-SRC          = $(wildcard src/*.c)
-TEST_SRC     = $(wildcard tests/*.c)
-BENCH_SRC    = $(wildcard bench/*.c)
-SRC_NO_MAIN  = $(filter-out src/main.c, $(SRC))
-
-APP_BIN   = build/tasklab.exe
-TEST_BIN  = build/test_runner.exe
-BENCH_BIN = build/bench_runner.exe
-
-OBJ = $(patsubst src/%.c, build/%.o, $(SRC))
+BUILD_DIR := cmake-build-$(PRESET)
 
 .PHONY: all test bench clean
 
-all: build $(APP_BIN)
+all:
+	$(CMAKE) --build --preset $(PRESET)
 
-test: build $(TEST_BIN)
-	$(TEST_BIN)
+test:
+	$(CMAKE) --build --preset $(PRESET)
+	$(CTEST) --preset $(PRESET) --output-on-failure
 
-bench: build $(BENCH_BIN)
-	$(BENCH_BIN)
-
-build:
-	if not exist build mkdir build
-
-$(APP_BIN): $(OBJ)
-	$(CC) $(DEBUG) $^ -o $@
-
-$(TEST_BIN): $(SRC_NO_MAIN) $(TEST_SRC)
-	$(CC) $(DEBUG) $^ -o $@ $(LDFLAGS)
-
-$(BENCH_BIN): $(SRC_NO_MAIN) $(BENCH_SRC)
-	$(CC) $(DEBUG) $^ -o $@
-
-build/%.o: src/%.c
-	$(CC) $(DEBUG) -c $< -o $@
+bench:
+	$(CMAKE) --build --preset $(PRESET) --target bench_runner
+	$(BUILD_DIR)/bench_runner$(EXE_EXT)
 
 clean:
-	if exist build rmdir /S /Q build
+	$(CMAKE) -E rm -rf cmake-build-debug cmake-build-debug-vcpkg cmake-build-release cmake-build-coverage cmake-build-sanitize build
