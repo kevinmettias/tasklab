@@ -7,7 +7,7 @@ TaskNode *Create_TaskNode()
     return malloc(sizeof(TaskNode));
 }
 
-TaskNode *Create_And_Initialize_TaskNode(TlTask *task)
+TaskNode *Create_And_Initialize_TaskNode(Task *task)
 {
     if (task == NULL)
     {
@@ -21,6 +21,7 @@ TaskNode *Create_And_Initialize_TaskNode(TlTask *task)
     }
 
     node->task = task;
+    node->next = NULL;
     return node;
 }
 

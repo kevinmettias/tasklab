@@ -3,27 +3,27 @@
 
 #include <stdint.h>
 
-typedef void (*TlTaskFn)(void *ctx);
+typedef void (*TaskFn)(void *ctx);
 
-enum TlTaskState {
+enum TaskState {
     CREATED,
     RUNNING,
     DONE,
     FAILED,
 };
 
-typedef struct TlTask {
-    TlTaskFn fn;
+typedef struct Task {
+    TaskFn fn;
     uint64_t id;
     void *ctx;
-    enum TlTaskState state;
-} TlTask;
+    enum TaskState state;
+} Task;
 
 
-TlTask *Create_And_Initialize_Task(TlTaskFn fn, void *ctx);
+Task *Create_And_Initialize_Task(TaskFn fn, void *ctx);
 
-void Run_Task(TlTask *task);
+void Run_Task(Task *task);
 
-void Destroy_Task(TlTask *task);
+void Destroy_Task(Task *task);
 
 #endif //TASKLAB_TASK_H

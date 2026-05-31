@@ -3,19 +3,19 @@
 #include "tl/task.h"
 #include "rand_id_generator.h"
 
-TlTask *Create_Task()
+Task *Create_Task()
 {
-    return malloc(sizeof(TlTask));
+    return malloc(sizeof(Task));
 }
 
-TlTask *Create_And_Initialize_Task(TlTaskFn fn, void *ctx)
+Task *Create_And_Initialize_Task(TaskFn fn, void *ctx)
 {
     if (fn == NULL)
     {
         return NULL;
     }
 
-    TlTask *task = Create_Task();
+    Task *task = Create_Task();
     if (task == NULL)
     {
         return NULL;
@@ -28,7 +28,7 @@ TlTask *Create_And_Initialize_Task(TlTaskFn fn, void *ctx)
     return task;
 }
 
-void Run_Task(TlTask *task)
+void Run_Task(Task *task)
 {
     if (task == NULL || task->state != CREATED)
     {
@@ -41,7 +41,7 @@ void Run_Task(TlTask *task)
     task->state = DONE;
 }
 
-void Destroy_Task(TlTask *task) {
+void Destroy_Task(Task *task) {
     if (task == NULL)
     {
         return;

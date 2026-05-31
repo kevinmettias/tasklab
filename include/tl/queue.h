@@ -6,7 +6,7 @@
 #include "task.h"
 
 typedef struct TaskNode {
-    TlTask *task;
+    Task *task;
     struct TaskNode *next;
 } TaskNode;
 
@@ -18,7 +18,7 @@ typedef struct TaskQueue {
 
 TaskQueue *Create_And_Initalize_TaskQueue();
 
-void Push_To_End_Of_TaskQueue(TaskQueue *queue, TlTask *task);
+void Push_To_End_Of_TaskQueue(TaskQueue *queue, Task *task);
 
 TaskNode *Pop_From_Top_Of_TaskQueue(TaskQueue *queue);
 

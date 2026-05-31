@@ -7,7 +7,7 @@
 
 typedef struct TestCase
 {
-    TlTaskFn fn;
+    TaskFn fn;
     void *ctx;
 } TestCase;
 
@@ -24,4 +24,3 @@ void Test_Queue_Task_Fn(void *ctx);
 void Test_Executor_Task_Fn(void *ctx);
 
 #endif
-

@@ -16,7 +16,7 @@ TaskExecutor *Create_And_Initialize_Task_Executor(TaskQueue *queue);
 
 TaskExecutor *Create_And_Initialize_Task_Executor_With_New_Queue();
 
-void Submit_To_Executor(TaskExecutor *executor, TlTask *task);
+void Submit_To_Executor(TaskExecutor *executor, Task *task);
 
 void Execute_Tasks_In_TaskQueue_Until_Queue_Empty(TaskExecutor *executor);
 

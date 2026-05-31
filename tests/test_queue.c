@@ -18,7 +18,7 @@ void Test_Queue_Task_Fn(void *ctx) {
     test_ctx->result = test_ctx->input * 2;
 }
 
-static void Test_Queue_Assert_Null_Safe(TlTask *task)
+static void Test_Queue_Assert_Null_Safe(Task *task)
 {
     if (task != NULL)
     {
@@ -30,7 +30,7 @@ static void Test_Queue_Assert_Null_Safe(TlTask *task)
 void Test_Queue_Create_And_Initialize_Task_Transitions_State_To_Created(void **state) {
     TestCase *test_case = *state;
 
-    TlTask *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
+    Task *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
     if (test_case->fn == NULL) {
         Test_Queue_Assert_Null_Safe(task);
         return;
@@ -48,7 +48,7 @@ void Test_Queue_Run_Task_Transitions_State_To_Done(void **state)
 {
     TestCase *test_case = *state;
 
-    TlTask *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
+    Task *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
     if (test_case->fn == NULL)
     {
         Test_Queue_Assert_Null_Safe(task);

@@ -8,7 +8,7 @@ Task scheduling lab for learning task execution, queue behavior, and eventually 
 - `src/` — implementation files
 - `tests/` — cmocka test runner and module tests
 - `bench/` — benchmark harnesses
-- `docs/` — design notes and local development docs
+- `docs/` — design notes, lab guide, architecture notes, benchmarks, and local development docs
 - `scripts/` — local helper scripts for build/test/dev workflows
 
 ## Build

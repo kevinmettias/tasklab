@@ -8,8 +8,7 @@
 #include "../src/task_node.h"
 
 void Test_Node_Task_Fn(void *ctx) {
-    if (ctx == NULL)
-    {
+    if (ctx == NULL) {
         return;
     }
 
@@ -21,9 +20,8 @@ void Test_Node_Task_Fn(void *ctx) {
 void Test_Create_And_Initialize_TaskNode(void **state) {
     TestCase *test_case = *state;
 
-    TlTask *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
-    if (test_case->fn == NULL)
-    {
+    Task *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
+    if (test_case->fn == NULL) {
         assert_null(Create_And_Initialize_TaskNode(task));
         Destroy_Task(task);
         return;

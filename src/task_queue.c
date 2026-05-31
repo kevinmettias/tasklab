@@ -17,10 +17,12 @@ TaskQueue *Create_And_Initalize_TaskQueue()
     }
 
     queue->id = Random_uint64_t_Id();
+    queue->first_task_node = NULL;
+    queue->last_task_node = NULL;
     return queue;
 }
 
-void Push_To_End_Of_TaskQueue(TaskQueue *queue, TlTask *task)
+void Push_To_End_Of_TaskQueue(TaskQueue *queue, Task *task)
 {
     if (task == NULL || task->state != CREATED)
     {
@@ -55,6 +57,10 @@ TaskNode *Pop_From_Top_Of_TaskQueue(TaskQueue *queue)
 
     TaskNode *first_node = queue->first_task_node;
     queue->first_task_node = queue->first_task_node->next;
+    if (queue->first_task_node == NULL)
+    {
+        queue->last_task_node = NULL;
+    }
     return first_node;
 }
 

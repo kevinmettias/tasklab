@@ -2,94 +2,123 @@
 #include <stdlib.h>
 #include <setjmp.h>
 #include <cmocka.h>
+#include <stdio.h>
 
 #include "test_task.h"
 #include "test_node.h"
 #include "test_queue.h"
 #include "test_executor.h"
 
+#define TEST_ENTRY(name) { #name, name }
+#define TEMPLATE_ENTRY(name) { name, sizeof(name)/sizeof(name[0]) }
 
-int main(void) {
-    const TestCtx default_ctx = { .input = 5 };
+typedef struct {
+    const char *name;
+    CMUnitTestFunction test_func;
+} TestTemplate;
+
+typedef struct {
+    const TestTemplate *array;
+    size_t size;
+} TestTemplateGroup;
+
+static const TestCtx default_ctx = { .input = 5 };
+
+static const TestTemplate test_task_templates[] = {
+    TEST_ENTRY(Test_Create_And_Initialize_Task_Transitions_State_To_Created),
+    TEST_ENTRY(Test_Run_Task_Transitions_State_To_Done),
+};
+
+static const TestTemplate test_node_templates[] = {
+    TEST_ENTRY(Test_Create_And_Initialize_TaskNode),
+};
+
+static const TestTemplate test_queue_templates[] = {
+    TEST_ENTRY(Test_Queue_Create_And_Initialize_Task_Transitions_State_To_Created),
+    TEST_ENTRY(Test_Queue_Run_Task_Transitions_State_To_Done),
+};
+
+static const TestTemplate test_executor_templates[] = {
+    TEST_ENTRY(Test_Create_And_Initialize_Task_Executor),
+    TEST_ENTRY(Test_Create_And_Initialize_Task_Executor_With_New_Queue),
+    TEST_ENTRY(Test_Execute_Tasks_In_TaskQueue_Until_Queue_Empty),
+};
+
+// Read-only structure that is exposed to this file only
+static const TestTemplateGroup all_template_groups[] =
+{
+    TEMPLATE_ENTRY(test_task_templates),
+    TEMPLATE_ENTRY(test_node_templates),
+    TEMPLATE_ENTRY(test_queue_templates),
+    TEMPLATE_ENTRY(test_executor_templates),
+};
+
+static const size_t num_template_groups = sizeof(all_template_groups) / sizeof(all_template_groups[0]);
+
+static size_t Get_Num_Templates()
+{
+    size_t num_templates = 0;
+    for (size_t i = 0; i < num_template_groups; ++i)
+    {
+        num_templates += all_template_groups[i].size;
+    }
+    return num_templates;
+}
+
+int main(void)
+{
+    const size_t num_templates = Get_Num_Templates();
 
     static TestCtx ctxs[] = {
         default_ctx,
     };
 
-    static TestCase test_cases[] = {
+    static const TestCase test_cases[] = {
         { .fn = Test_Task_Fn, .ctx = &ctxs[0] },
         { .fn = Test_Task_Fn, .ctx = NULL },
         { .fn = NULL, .ctx = NULL },
     };
 
     const size_t num_cases = sizeof(test_cases) / sizeof(test_cases[0]);
-    const size_t tests_per_case = 2;
-    const size_t total_tests = num_cases * tests_per_case * 3;
+    const size_t total_tests = num_cases * num_templates;
 
+    printf(
+        "[ ------------------------------]\n"
+        "  Running %zu tests\n"
+        "  Number of Cases: %zu\n"
+        "  Number of Templates %zu\n",
+        total_tests, num_cases, num_templates);
+
+    // Initialize all CMUnitTests to 0
     struct CMUnitTest *tests = calloc(total_tests, sizeof(*tests));
-    if (tests == NULL) {
+    if (tests == NULL)
+    {
         return 1;
     }
 
-    size_t k = 0;
-    for (size_t i = 0; i < num_cases; ++i) {
-        tests[k++] = (struct CMUnitTest)
-        {
-            .name = "test_create_task_transition_state_to_create",
-            .test_func = Test_Create_And_Initialize_Task_Transitions_State_To_Created,
-            .setup_func = NULL,
-            .teardown_func = NULL,
-            .initial_state = &test_cases[i],
-        };
+    printf(
+        "  Size of Tests struct: %zu bytes\n"
+        "[ ------------------------------]\n\n",
+        sizeof(*tests));
 
-        tests[k++] = (struct CMUnitTest)
-        {
-            .name = "test_run_task_transition_state_to_done",
-            .test_func = Test_Run_Task_Transitions_State_To_Done,
-            .setup_func = NULL,
-            .teardown_func = NULL,
-            .initial_state = &test_cases[i],
-        };
-
-        tests[k++] = (struct CMUnitTest)
-        {
-            .name = "test_node_create",
-            .test_func = Test_Create_And_Initialize_TaskNode,
-            .setup_func = NULL,
-            .teardown_func = NULL,
-            .initial_state = &test_cases[i],
-        };
-
-        tests[k++] = (struct CMUnitTest)
-        {
-            .name = "test_queue_create",
-            .test_func = Test_Queue_Create_And_Initialize_Task_Transitions_State_To_Created,
-            .setup_func = NULL,
-            .teardown_func = NULL,
-            .initial_state = &test_cases[i],
-        };
-
-        tests[k++] = (struct CMUnitTest)
-        {
-            .name = "test_queue_run",
-            .test_func = Test_Queue_Run_Task_Transitions_State_To_Done,
-            .setup_func = NULL,
-            .teardown_func = NULL,
-            .initial_state = &test_cases[i],
-        };
-
-        tests[k++] = (struct CMUnitTest)
-        {
-            .name = "test_executor_create",
-            .test_func = Test_Create_And_Initialize_Task_Executor,
-            .setup_func = NULL,
-            .teardown_func = NULL,
-            .initial_state = &test_cases[i],
-        };
-
+    size_t test_index = 0;
+    for (size_t test_case_index = 0; test_case_index < num_cases; test_case_index++) {
+        for (size_t group_index = 0; group_index < num_template_groups; group_index++) {
+            for (size_t template_index = 0; template_index < all_template_groups[group_index].size; template_index++)
+            {
+                tests[test_index++] = (struct CMUnitTest){
+                    .name = all_template_groups[group_index].array[template_index].name,
+                    .test_func = all_template_groups[group_index].array[template_index].test_func,
+                    .setup_func = NULL,
+                    .teardown_func = NULL,
+                    .initial_state = &test_cases[test_case_index],
+                };
+            }
+        }
     }
 
-    int rc = _cmocka_run_group_tests("tasklab", tests, k, NULL, NULL);
+    int rc = _cmocka_run_group_tests("tasklab", tests, total_tests, NULL, NULL);
     free(tests);
     return rc;
 }
+

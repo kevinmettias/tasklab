@@ -55,4 +55,3 @@ Helper scripts live under `scripts/`:
 - MSYS2 is installed at `C:\msys64`
 - vcpkg is installed at `C:\dev\vcpkg`
 - `cmocka` is installed via vcpkg for Windows CMake workflows
-

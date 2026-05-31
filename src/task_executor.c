@@ -16,6 +16,8 @@ TaskExecutor *Create_And_Initialize_Task_Executor(TaskQueue *queue)
     }
 
     executor->queue = queue;
+    executor->failure_fn = NULL;
+    executor->failure_ctx = NULL;
     return executor;
 }
 
@@ -25,7 +27,7 @@ TaskExecutor *Create_And_Initialize_Task_Executor_With_New_Queue()
     return Create_And_Initialize_Task_Executor(queue);
 }
 
-void Submit_To_Executor(TaskExecutor *executor, TlTask *task)
+void Submit_To_Executor(TaskExecutor *executor, Task *task)
 {
     if (executor == NULL)
     {
@@ -42,7 +44,7 @@ void Run_Task_In_TaskNode(TaskNode *take_node)
         return;
     }
 
-    TlTask *task = take_node->task;
+    Task *task = take_node->task;
     Run_Task(task);
 }
 
