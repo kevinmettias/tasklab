@@ -87,7 +87,7 @@ int main(void)
         default_ctx,
     };
 
-    static TestCase test_cases[] = {
+    static const TestCase test_cases[] = {
         { .fn = Test_Task_Fn, .ctx = &ctxs[0] },
         { .fn = Test_Task_Fn, .ctx = NULL },
         { .fn = NULL, .ctx = NULL },
@@ -111,8 +111,7 @@ int main(void)
     }
 
     printf(
-        "  Size of Tests struct: %zu bytes\n"
-        "[ ------------------------------]\n\n",
+        "  Size of Tests pointer: %zu bytes\n",
         sizeof(*tests));
 
     size_t test_index = 0;
@@ -130,6 +129,13 @@ int main(void)
             }
         }
     }
+
+
+    // TODO: CALCULATE TOTAL MEMORY ALLOCATIONS NEEDED FOR TESTS
+    printf(
+        "  Total Size of Tests struct: %zu bytes\n"
+        "[ ------------------------------]\n\n",
+        sizeof(*tests));
 
     int rc = _cmocka_run_group_tests("tasklab", tests, total_tests, NULL, NULL);
     free(tests);

@@ -1,9 +1,9 @@
-export PATH := /ucrt64/bin:/usr/bin:$(PATH)
+CC       ?= gcc
 
-CC       = /ucrt64/bin/gcc.exe
-
-CMOCKA_INC = /ucrt64/include
-CMOCKA_LIB = /ucrt64/lib
+VCPKG_ROOT ?= C:/dev/vcpkg
+CMOCKA_INC ?= $(VCPKG_ROOT)/installed/x64-windows/include
+CMOCKA_LIB ?= $(VCPKG_ROOT)/installed/x64-windows/lib
+CMOCKA_BIN ?= $(VCPKG_ROOT)/installed/x64-windows/bin
 
 CFLAGS   = -Wall -Wextra -I$(CMOCKA_INC) -Iinclude
 DEBUG    = -g -O0 $(CFLAGS)
@@ -25,13 +25,14 @@ OBJ = $(patsubst src/%.c, build/%.o, $(SRC))
 all: build $(APP_BIN)
 
 test: build $(TEST_BIN)
-	$(TEST_BIN)
+	@if exist $(subst /,\,$(CMOCKA_BIN)\cmocka.dll) copy /y $(subst /,\,$(CMOCKA_BIN)\cmocka.dll) $(subst /,\,build\)
+	./$(TEST_BIN)
 
 bench: build $(BENCH_BIN)
-	$(BENCH_BIN)
+	./$(BENCH_BIN)
 
 build:
-	mkdir -p build
+	@if not exist build mkdir build
 
 $(APP_BIN): $(OBJ)
 	$(CC) $(DEBUG) $^ -o $@
@@ -46,4 +47,4 @@ build/%.o: src/%.c
 	$(CC) $(DEBUG) -c $< -o $@
 
 clean:
-	rm -rf build
+	@if exist build rmdir /s /q build
