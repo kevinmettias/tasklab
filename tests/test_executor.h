@@ -1,8 +1,8 @@
 #ifndef TASKLAB_TEST_TASK_EXECUTOR_H
 #define TASKLAB_TEST_TASK_EXECUTOR_H
 
-#include "tl/queue.h"
-#include "tl/executor.h"
+#include "thread_pool/queue.h"
+#include "thread_pool/executor.h"
 #include "test_support.h"
 
 void Test_Executor_Task_Fn(void *ctx);

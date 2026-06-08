@@ -1,9 +1,9 @@
-export PATH := C:/msys64/ucrt64/bin;$(PATH)
+export PATH := /ucrt64/bin:/usr/bin:$(PATH)
 
-CC       = C:/msys64/ucrt64/bin/gcc.exe
+CC       = /ucrt64/bin/gcc.exe
 
-CMOCKA_INC = C:/msys64/ucrt64/include
-CMOCKA_LIB = C:/msys64/ucrt64/lib
+CMOCKA_INC = /ucrt64/include
+CMOCKA_LIB = /ucrt64/lib
 
 CFLAGS   = -Wall -Wextra -I$(CMOCKA_INC) -Iinclude
 DEBUG    = -g -O0 $(CFLAGS)
@@ -31,7 +31,7 @@ bench: build $(BENCH_BIN)
 	$(BENCH_BIN)
 
 build:
-	if not exist build mkdir build
+	mkdir -p build
 
 $(APP_BIN): $(OBJ)
 	$(CC) $(DEBUG) $^ -o $@
@@ -46,4 +46,4 @@ build/%.o: src/%.c
 	$(CC) $(DEBUG) -c $< -o $@
 
 clean:
-	if exist build rmdir /S /Q build
+	rm -rf build

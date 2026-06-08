@@ -1,7 +1,7 @@
 #ifndef TASKLAB_TEST_TASK_NODE_H
 #define TASKLAB_TEST_TASK_NODE_H
 
-#include "tl/queue.h"
+#include "thread_pool/queue.h"
 #include "test_support.h"
 
 void Test_Node_Task_Fn(void *ctx);

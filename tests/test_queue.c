@@ -5,11 +5,11 @@
 #include <cmocka.h>
 
 #include "test_queue.h"
-#include "tl/queue.h"
+#include "test_node.h"
+#include "thread_pool/queue.h"
 
 void Test_Queue_Task_Fn(void *ctx) {
-    if (ctx == NULL)
-    {
+    if (ctx == NULL) {
         return;
     }
 
@@ -18,52 +18,76 @@ void Test_Queue_Task_Fn(void *ctx) {
     test_ctx->result = test_ctx->input * 2;
 }
 
-static void Test_Queue_Assert_Null_Safe(Task *task)
-{
-    if (task != NULL)
-    {
-        Destroy_Task(task);
-    }
-    assert_null(task);
+void Test_Create_And_Initalize_TaskQueue(void **state) {
+    (void)state;
+
+    TaskQueue *queue = Create_And_Initalize_TaskQueue();
+    assert_non_null(queue);
+    assert_int_equal(Get_TaskQueue_Node_Count(queue), 0);
+    Destroy_TaskQueue(queue);
 }
 
-void Test_Queue_Create_And_Initialize_Task_Transitions_State_To_Created(void **state) {
-    TestCase *test_case = *state;
+void Test_Push_To_End_Of_TaskQueue(void **state) {
+    (void)state;
 
-    Task *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
-    if (test_case->fn == NULL) {
-        Test_Queue_Assert_Null_Safe(task);
-        return;
-    }
+    TaskQueue *queue = Create_And_Initalize_TaskQueue();
+    assert_non_null(queue);
 
-    assert_non_null(task);
-    assert_int_not_equal(task->id, 0);
-    assert_ptr_equal(task->fn, test_case->fn);
-    assert_ptr_equal(task->ctx, test_case->ctx);
-    assert_int_equal(task->state, CREATED);
-    Destroy_Task(task);
+    Task *task1 = Create_And_Initialize_Task(Test_Queue_Task_Fn, NULL);
+    Task *task2 = Create_And_Initialize_Task(Test_Queue_Task_Fn, NULL);
+    Task *task3 = Create_And_Initialize_Task(Test_Queue_Task_Fn, NULL);
+
+    Push_To_End_Of_TaskQueue(queue, task1);
+    Push_To_End_Of_TaskQueue(queue, task2);
+    Push_To_End_Of_TaskQueue(queue, task3);
+
+    assert_int_equal(Get_TaskQueue_Node_Count(queue), 3);
+
+    Destroy_Task(task1);
+    Destroy_Task(task2);
+    Destroy_Task(task3);
+    Destroy_TaskQueue(queue);
 }
 
-void Test_Queue_Run_Task_Transitions_State_To_Done(void **state)
-{
-    TestCase *test_case = *state;
+void Test_Create_And_Initalize_TaskQueue_And_Pop_From_Top_Of_TaskQueue(void **state) {
+    (void)state;
 
-    Task *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
-    if (test_case->fn == NULL)
-    {
-        Test_Queue_Assert_Null_Safe(task);
-        return;
-    }
+    TaskQueue *queue = Create_And_Initalize_TaskQueue();
+    assert_non_null(queue);
 
-    Run_Task(task);
+    Task *task1 = Create_And_Initialize_Task(Test_Queue_Task_Fn, NULL);
+    Task *task2 = Create_And_Initialize_Task(Test_Queue_Task_Fn, NULL);
 
-    if (test_case->ctx != NULL)
-    {
-        TestCtx *test_ctx = test_case->ctx;
-        assert_true(test_ctx->was_called);
-        assert_int_equal(test_ctx->result, test_ctx->input * 2);
-    }
+    Push_To_End_Of_TaskQueue(queue, task1);
+    Push_To_End_Of_TaskQueue(queue, task2);
 
-    assert_int_equal(task->state, DONE);
-    Destroy_Task(task);
+    assert_int_equal(Get_TaskQueue_Node_Count(queue), 2);
+
+    TaskNode *node1 = Pop_From_Top_Of_TaskQueue(queue);
+    assert_non_null(node1);
+    assert_ptr_equal(node1->task, task1);
+
+    TaskNode *node2 = Pop_From_Top_Of_TaskQueue(queue);
+    assert_non_null(node2);
+    assert_ptr_equal(node2->task, task2);
+
+    assert_int_equal(Get_TaskQueue_Node_Count(queue), 0);
+
+    Destroy_Task(task1);
+    Destroy_Task(task2);
+    Destroy_TaskNode(node1);
+    Destroy_TaskNode(node2);
+    Destroy_TaskQueue(queue);
+}
+
+void Test_Pop_Empty_TaskQueue(void **state) {
+    (void)state;
+
+    TaskQueue *queue = Create_And_Initalize_TaskQueue();
+    assert_non_null(queue);
+
+    TaskNode *node = Pop_From_Top_Of_TaskQueue(queue);
+    assert_null(node);
+
+    Destroy_TaskQueue(queue);
 }

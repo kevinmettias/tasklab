@@ -2,13 +2,8 @@
 #define TASKLAB_QUEUE_H
 
 #include <stdint.h>
-
+#include "thread_pool/node.h"
 #include "task.h"
-
-typedef struct TaskNode {
-    Task *task;
-    struct TaskNode *next;
-} TaskNode;
 
 typedef struct TaskQueue {
     uint64_t id;

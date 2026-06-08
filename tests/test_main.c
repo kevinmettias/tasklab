@@ -10,7 +10,7 @@
 #include "test_executor.h"
 
 #define TEST_ENTRY(name) { #name, name }
-#define TEMPLATE_ENTRY(name) { name, sizeof(name)/sizeof(name[0]) }
+#define TEST_TEMPLATE_GROUP_ENTRY(name) { name, sizeof(name)/sizeof(name[0]) }
 
 typedef struct {
     const char *name;
@@ -34,8 +34,10 @@ static const TestTemplate test_node_templates[] = {
 };
 
 static const TestTemplate test_queue_templates[] = {
-    TEST_ENTRY(Test_Queue_Create_And_Initialize_Task_Transitions_State_To_Created),
-    TEST_ENTRY(Test_Queue_Run_Task_Transitions_State_To_Done),
+    TEST_ENTRY(Test_Create_And_Initalize_TaskQueue),
+    TEST_ENTRY(Test_Push_To_End_Of_TaskQueue),
+    TEST_ENTRY(Test_Create_And_Initalize_TaskQueue_And_Pop_From_Top_Of_TaskQueue),
+    TEST_ENTRY(Test_Pop_Empty_TaskQueue),
 };
 
 static const TestTemplate test_executor_templates[] = {
@@ -47,10 +49,10 @@ static const TestTemplate test_executor_templates[] = {
 // Read-only structure that is exposed to this file only
 static const TestTemplateGroup all_template_groups[] =
 {
-    TEMPLATE_ENTRY(test_task_templates),
-    TEMPLATE_ENTRY(test_node_templates),
-    TEMPLATE_ENTRY(test_queue_templates),
-    TEMPLATE_ENTRY(test_executor_templates),
+    TEST_TEMPLATE_GROUP_ENTRY(test_task_templates),
+    TEST_TEMPLATE_GROUP_ENTRY(test_node_templates),
+    TEST_TEMPLATE_GROUP_ENTRY(test_queue_templates),
+    TEST_TEMPLATE_GROUP_ENTRY(test_executor_templates),
 };
 
 static const size_t num_template_groups = sizeof(all_template_groups) / sizeof(all_template_groups[0]);
@@ -65,6 +67,18 @@ static size_t Get_Num_Templates()
     return num_templates;
 }
 
+static int setup_test_context(void **state)
+{
+    TestCase *test_case = *state;
+    if (test_case != NULL && test_case->ctx != NULL)
+    {
+        TestCtx *ctx = test_case->ctx;
+        ctx->was_called = false;
+        ctx->result = 0;
+    }
+    return 0;
+}
+
 int main(void)
 {
     const size_t num_templates = Get_Num_Templates();
@@ -73,7 +87,7 @@ int main(void)
         default_ctx,
     };
 
-    static const TestCase test_cases[] = {
+    static TestCase test_cases[] = {
         { .fn = Test_Task_Fn, .ctx = &ctxs[0] },
         { .fn = Test_Task_Fn, .ctx = NULL },
         { .fn = NULL, .ctx = NULL },
@@ -109,7 +123,7 @@ int main(void)
                 tests[test_index++] = (struct CMUnitTest){
                     .name = all_template_groups[group_index].array[template_index].name,
                     .test_func = all_template_groups[group_index].array[template_index].test_func,
-                    .setup_func = NULL,
+                    .setup_func = setup_test_context,
                     .teardown_func = NULL,
                     .initial_state = &test_cases[test_case_index],
                 };
