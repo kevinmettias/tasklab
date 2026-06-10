@@ -10,7 +10,7 @@ option(TASKLAB_ENABLE_ASAN "Enable AddressSanitizer instrumentation" OFF)
 option(TASKLAB_ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer instrumentation" OFF)
 option(TASKLAB_ENABLE_COVERAGE "Enable coverage instrumentation" OFF)
 
-set(_tasklab_vcpkg_triplet "x64-windows")
+set(_tasklab_vcpkg_triplet "x64-mingw-dynamic")
 set(_tasklab_vcpkg_roots
     "$ENV{VCPKG_ROOT}"
     "C:/dev/vcpkg"

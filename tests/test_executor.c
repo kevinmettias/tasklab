@@ -48,10 +48,10 @@ void Test_Create_And_Initialize_Task_Executor(void **state) {
 void Test_Create_And_Initialize_Task_Executor_With_New_Queue(void **state) {
     (void)state;
 
-    /*TaskExecutor *executor = Create_And_Initialize_Task_Executor_With_New_Queue();
+    TaskExecutor *executor = Create_And_Initialize_Task_Executor_With_New_Queue();
     assert_non_null(executor);
     assert_non_null(executor->queue);
-    Destroy_Task_Executor(executor);*/
+    Destroy_Task_Executor(executor);
 }
 
 void Test_Execute_Tasks_In_TaskQueue_Until_Queue_Empty(void **state) {
@@ -64,6 +64,7 @@ void Test_Execute_Tasks_In_TaskQueue_Until_Queue_Empty(void **state) {
     assert_non_null(executor);
 
     if (test_case->fn == NULL) {
+        // TODO: WHY DO WE DO THIS?
         Task *task = Create_And_Initialize_Task(test_case->fn, test_case->ctx);
         Test_Executor_Assert_Null_Safe_Task(task);
         Destroy_Task_Executor(executor);
