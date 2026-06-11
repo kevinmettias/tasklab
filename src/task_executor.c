@@ -52,6 +52,10 @@ TaskNode *Execute_Next_Task_In_TaskQueue(TaskExecutor *executor)
 {
     TaskQueue *queue = executor->queue;
     TaskNode *task_node = Pop_From_Top_Of_TaskQueue(queue);
+    if (task_node == NULL)
+    {
+        return NULL;
+    }
     Run_Task_In_TaskNode(task_node);
     if (task_node->task->state == FAILED)
     {

@@ -9,6 +9,8 @@ void Test_Executor_Task_Fn(void *ctx);
 void Test_Create_And_Initialize_Task_Executor(void **state);
 void Test_Create_And_Initialize_Task_Executor_With_New_Queue(void **state);
 void Test_Execute_Tasks_In_TaskQueue_Until_Queue_Empty(void **state);
+void Test_Execute_Empty_TaskQueue_Is_Safe(void **state);
+void Test_Execute_Multiple_Tasks_In_Submission_Order(void **state);
 
 #endif //TASKLAB_TEST_TASK_EXECUTOR_H
 
