@@ -69,6 +69,21 @@
         "TASKLAB_ENABLE_ASAN": "ON",
         "TASKLAB_ENABLE_UBSAN": "ON"
       }
+    },
+    {
+      "name": "lsan-linux",
+      "displayName": "LSan (Linux/WSL)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-lsan",
+      "condition": {
+        "type": "notEquals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TASKLAB_ENABLE_LSAN": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -92,6 +107,10 @@
     {
       "name": "sanitize-linux",
       "configurePreset": "sanitize-linux"
+    },
+    {
+      "name": "lsan-linux",
+      "configurePreset": "lsan-linux"
     }
   ],
   "testPresets": [
@@ -112,6 +131,13 @@
     {
       "name": "sanitize-linux",
       "configurePreset": "sanitize-linux",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "lsan-linux",
+      "configurePreset": "lsan-linux",
       "output": {
         "outputOnFailure": true
       }

@@ -64,6 +64,7 @@ TaskNode *Execute_Next_Task_In_TaskQueue(TaskExecutor *executor)
             executor->failure_fn(executor->failure_ctx);
         }
     }
+    Destroy_TaskNode(task_node);
     return queue->first_task_node;
 }
 

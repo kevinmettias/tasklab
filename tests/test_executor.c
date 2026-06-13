@@ -29,6 +29,10 @@ typedef struct ExecutorOrderCtx {
     int was_called;
 } ExecutorOrderCtx;
 
+typedef struct ExecutorFailureCtx {
+    int calls;
+} ExecutorFailureCtx;
+
 static void Test_Executor_Order_Task_Fn(void *ctx) {
     ExecutorOrderCtx *order_ctx = ctx;
     assert_non_null(order_ctx);
@@ -37,6 +41,12 @@ static void Test_Executor_Order_Task_Fn(void *ctx) {
     assert_int_equal(*order_ctx->next_order, order_ctx->expected_order);
     order_ctx->was_called = 1;
     (*order_ctx->next_order)++;
+}
+
+static void Test_Executor_Failure_Handler(void *ctx) {
+    ExecutorFailureCtx *failure_ctx = ctx;
+    assert_non_null(failure_ctx);
+    failure_ctx->calls++;
 }
 
 void Test_Create_And_Initialize_Task_Executor(void **state) {
@@ -72,6 +82,22 @@ void Test_Execute_Empty_TaskQueue_Is_Safe(void **state) {
     Execute_Tasks_In_TaskQueue_Until_Queue_Empty(executor);
 
     assert_int_equal(Get_TaskQueue_Node_Count(executor->queue), 0);
+    Destroy_Task_Executor(executor);
+}
+
+void Test_Execute_Empty_TaskQueue_Does_Not_Invoke_Failure_Handler(void **state) {
+    (void)state;
+
+    ExecutorFailureCtx failure_ctx = { .calls = 0 };
+
+    TaskExecutor *executor = Create_And_Initialize_Task_Executor_With_New_Queue();
+    assert_non_null(executor);
+    executor->failure_fn = Test_Executor_Failure_Handler;
+    executor->failure_ctx = &failure_ctx;
+
+    Execute_Tasks_In_TaskQueue_Until_Queue_Empty(executor);
+
+    assert_int_equal(failure_ctx.calls, 0);
     Destroy_Task_Executor(executor);
 }
 

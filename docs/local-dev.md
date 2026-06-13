@@ -49,6 +49,7 @@ Helper scripts live under `scripts/`:
 
 - Windows/MSYS2 GCC: UndefinedBehaviorSanitizer is more realistic than AddressSanitizer.
 - Linux/WSL: use the `sanitize-linux` preset for full ASan + UBSan validation.
+- Linux/WSL leak checks: use the `lsan-linux` preset when you want leak-only runs.
 
 ## Current assumptions
 

@@ -66,6 +66,7 @@ static const TestTemplate TEST_EXECUTOR_TEMPLATES[] = {
     TEST_ENTRY(Test_Create_And_Initialize_Task_Executor_With_New_Queue),
     TEST_ENTRY(Test_Execute_Tasks_In_TaskQueue_Until_Queue_Empty),
     TEST_ENTRY(Test_Execute_Empty_TaskQueue_Is_Safe),
+    TEST_ENTRY(Test_Execute_Empty_TaskQueue_Does_Not_Invoke_Failure_Handler),
     TEST_ENTRY(Test_Execute_Multiple_Tasks_In_Submission_Order),
 };
 
@@ -252,6 +253,7 @@ int main(int argc, char **argv)
     fflush(stdout);
 
     size_t failed_tests = 0;
+    size_t successful_tests = 0;
     for (size_t test_index = 0; test_index < total_tests; ++test_index)
     {
         int rc = Run_Test_In_Child(argv[TEST_RUNNER_ARGUMENT], test_index);
@@ -261,17 +263,24 @@ int main(int argc, char **argv)
             printf("[  FAILED  ] #%zu %s exited with code %d\n", test_index, tests[test_index].name, rc);
             fflush(stdout);
         }
+        else
+        {
+            successful_tests++;
+        }
     }
 
     printf(
         "\n[ ------------------------------]\n"
+        "    Successful tests: %zu / %zu\n"
         "    Failed tests: %zu / %zu\n"
         "[ ------------------------------]\n",
-        failed_tests, total_tests);
+        successful_tests,
+        total_tests,
+        failed_tests,
+        total_tests);
 
     free(tests);
-    return failed_tests == EXIT_CODE_SUCCESS
+    return failed_tests == 0
         ? EXIT_CODE_SUCCESS
         : EXIT_CODE_FAILURE;
 }
-
